@@ -196,6 +196,41 @@
   }
   .qr figcaption{margin-top:9px;font-size:12.5px;color:var(--ink-3);letter-spacing:0}
 
+
+  /* ============ 预览 ============ */
+  .shots{
+    display:grid;grid-template-columns:1fr 232px;gap:22px;align-items:start;
+  }
+  .browser{
+    border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;
+    box-shadow:0 1px 2px rgba(0,0,0,.04), 0 18px 40px -24px rgba(0,0,0,.28);
+  }
+  .browser-bar{
+    height:34px;display:flex;align-items:center;gap:10px;padding:0 12px;
+    background:#f5f5f7;border-bottom:1px solid var(--line);
+  }
+  .browser-bar .dots{display:flex;gap:6px;flex:none}
+  .browser-bar .dots i{width:9px;height:9px;border-radius:50%;background:#d2d2d7;display:block}
+  .browser-bar .url{
+    font-size:11.5px;color:var(--ink-3);background:#fff;border-radius:6px;
+    padding:3px 12px;margin:0 auto;max-width:260px;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap;
+  }
+  .browser img{display:block;width:100%;height:auto}
+  .phone{
+    position:relative;width:232px;justify-self:end;
+    border:8px solid #f0f0f3;border-radius:30px;overflow:hidden;background:#fff;
+    box-shadow:0 1px 2px rgba(0,0,0,.05), 0 18px 40px -22px rgba(0,0,0,.3);
+  }
+  .phone-notch{
+    position:absolute;top:6px;left:50%;transform:translateX(-50%);
+    width:64px;height:5px;border-radius:3px;background:#e2e2e7;z-index:2;
+  }
+  .phone img{display:block;width:100%;height:auto;margin-top:12px}
+  @media (max-width:860px){
+    .shots{grid-template-columns:1fr;gap:16px}
+    .phone{width:200px;justify-self:center}
+  }
   /* ============ 支持（低调） ============ */
   .support{text-align:center;padding-bottom:0}
   .support h2{font-size:19px;font-weight:600;letter-spacing:-.01em;color:var(--ink-2)}
@@ -266,6 +301,7 @@
     </a>
     <nav class="nav-links">
       <a href="#tools">工具</a>
+      <a href="#preview">预览</a>
       <a href="#downloads">下载</a>
       <a href="#contact">联系</a>
       <a href="https://github.com/ekamalbekuulu-ai" target="_blank" rel="noopener">
@@ -298,6 +334,10 @@
       </div>
 
       <div class="lineup rise">
+        <a href="#tool-pagedrop">
+          <img src="assets/icons/pagedrop.svg" alt="PageDrop">
+          <span>PageDrop</span>
+        </a>
         <a href="#tool-xiaoxia">
           <img src="assets/icons/xiaoxia.svg" alt="小匣">
           <span>小匣</span>
@@ -321,7 +361,7 @@
       </div>
 
       <p class="statsline rise">
-        <span><b>5</b> 个项目</span><span class="dot">·</span>
+        <span><b>6</b> 个项目</span><span class="dot">·</span>
         <span><b>4</b> 个装得上</span><span class="dot">·</span>
         <span><b>90+</b> 个工具</span><span class="dot">·</span>
         <span>一分钱不收</span>
@@ -343,6 +383,24 @@
 
       <div class="grid" id="grid">
 
+        <article class="card rise" id="tool-pagedrop" data-cat="dev">
+          <div class="card-top">
+            <img src="assets/icons/pagedrop.svg" alt="PageDrop 图标">
+            <div>
+              <h3>PageDrop <span class="pill">新</span></h3>
+              <div class="pkg">hup.new.tg</div>
+            </div>
+          </div>
+          <p class="desc">
+            填一串 GitHub 密钥，选个网页，几秒钟就有自己的网址。
+            建仓库、传文件、开 Pages 全自动，<b>不用命令行，也不用服务器</b>。
+          </p>
+          <div class="tags"><span>一键部署</span><span>纯静态</span><span>手机可用</span><span>能绑域名</span></div>
+          <div class="card-links">
+            <a href="https://hup.new.tg" target="_blank" rel="noopener">打开使用</a>
+            <a class="mute" href="https://github.com/ekamalbekuulu-ai/PageDrop" target="_blank" rel="noopener">源码</a>
+          </div>
+        </article>
         <article class="card rise" id="tool-xiaoxia" data-cat="app">
           <div class="card-top">
             <img src="assets/icons/xiaoxia.svg" alt="小匣图标">
@@ -451,7 +509,7 @@
             </div>
           </div>
           <p class="desc">
-            五个项目一个账号，想一次翻完就从这儿进。仓库都能提 Issue，我看到就会回。
+            六个项目一个账号，想一次翻完就从这儿进。仓库都能提 Issue，我看到就会回。
           </p>
           <div class="tags"><span>GitHub</span><span>Issues</span><span>Releases</span></div>
           <div class="card-links">
@@ -463,6 +521,27 @@
     </section>
 
     <!-- ================= 下载 ================= -->
+    <!-- ================= 预览 ================= -->
+    <section id="preview">
+      <div class="sec-head rise">
+        <h2>看一眼长什么样</h2>
+        <p>PageDrop 的界面，左边是电脑上打开的样子，右边是手机。</p>
+      </div>
+
+      <div class="shots rise">
+        <div class="browser">
+          <div class="browser-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span class="url">hup.new.tg</span>
+          </div>
+          <img src="assets/shots/pagedrop-desktop.png" alt="PageDrop 桌面端界面" loading="lazy">
+        </div>
+        <div class="phone">
+          <div class="phone-notch" aria-hidden="true"></div>
+          <img src="assets/shots/pagedrop-mobile.png" alt="PageDrop 手机端界面" loading="lazy">
+        </div>
+      </div>
+    </section>
     <section id="downloads">
       <div class="sec-head rise">
         <h2>顺手拿点东西</h2>
