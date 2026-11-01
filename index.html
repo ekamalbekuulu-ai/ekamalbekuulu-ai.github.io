@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Yon ying · 自己写的小工具</title>
+<meta name="description" content="手机端 Android IDE、AI 助手、APK 工具箱、开机动画生成器。五个自用工具，源码都放出来了。">
+<link rel="icon" href="assets/avatar.jpg" type="image/jpeg">
+<noscript><style>.rise{animation:none !important}</style></noscript>
+<style>
+  :root{
+    color-scheme: light only;
+    --ink:#1d1d1f;
+    --ink-2:#6e6e73;
+    --ink-3:#86868b;
+    --hair:#e8e8ed;
+    --hair-2:#d2d2d7;
+    --fill:#f5f5f7;
+    --blue:#0071e3;
+    --link:#0066cc;
+    --white:#fff;
+    --r-lg:22px;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 10px 28px -14px rgba(0,0,0,.12);
+    --ease:cubic-bezier(.32,.72,0,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    background:var(--white);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",
+      "Helvetica Neue","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:17px;line-height:1.5;letter-spacing:-.01em;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block;max-width:100%}
+  .wrap{width:100%;max-width:1000px;margin:0 auto;padding:0 24px}
+  .ico{width:17px;height:17px;flex:none;fill:currentColor}
+  .ico-s{width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+  /* ============ 导航 ============ */
+  .nav{
+    position:sticky;top:0;z-index:40;
+    background:rgba(255,255,255,.78);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:1px solid var(--hair);
+  }
+  .nav-in{max-width:1000px;margin:0 auto;height:48px;padding:0 24px;display:flex;align-items:center;gap:24px}
+  .brand{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+  .brand img{width:22px;height:22px;border-radius:50%;object-fit:cover}
+  .nav-links{margin-left:auto;display:flex;align-items:center;gap:24px}
+  .nav-links a{font-size:12.5px;color:var(--ink-2);transition:color .2s;display:flex;align-items:center;gap:5px}
+  .nav-links a:hover{color:var(--ink)}
+
+  /* ============ Hero ============ */
+  .hero{padding:88px 0 0;text-align:center}
+  .face{
+    width:104px;height:104px;border-radius:50%;object-fit:cover;object-position:50% 34%;
+    margin:0 auto;background:var(--fill);
+    box-shadow:0 0 0 1px rgba(0,0,0,.07), 0 0 0 6px #fff,
+               0 2px 6px rgba(0,0,0,.05), 0 16px 34px -16px rgba(0,0,0,.24);
+  }
+  .who{margin-top:14px;font-size:14px;color:var(--ink-2)}
+  .who b{color:var(--ink);font-weight:600;letter-spacing:0}
+  h1{
+    margin-top:26px;
+    font-size:clamp(40px,7.2vw,72px);
+    line-height:1.07;font-weight:600;letter-spacing:-.025em;
+  }
+  h1 em{font-style:normal;color:var(--ink-2)}
+  .lead{
+    margin:22px auto 0;max-width:600px;
+    font-size:20px;line-height:1.5;color:var(--ink-2);letter-spacing:-.012em;
+  }
+  .cta{margin-top:32px;display:flex;gap:24px;justify-content:center;align-items:center;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    height:44px;padding:0 22px;border-radius:980px;
+    font-size:16px;letter-spacing:-.01em;
+    background:var(--blue);color:#fff;border:1px solid transparent;
+    cursor:pointer;font-family:inherit;transition:background .2s,transform .2s;
+  }
+  .btn:hover{background:#0077ed}
+  .btn:active{transform:scale(.985)}
+  .btn.ghost{background:transparent;color:var(--link);border-color:var(--hair-2)}
+  .btn.ghost:hover{background:var(--fill);border-color:var(--hair-2)}
+  .textlink{display:inline-flex;align-items:center;gap:4px;font-size:16px;color:var(--link)}
+  .textlink:hover{text-decoration:underline}
+
+  /* 图标列 */
+  .lineup{margin:60px auto 0;display:flex;justify-content:center;align-items:flex-start;gap:clamp(16px,4.2vw,42px);flex-wrap:wrap}
+  .lineup a{display:flex;flex-direction:column;align-items:center;gap:10px;width:74px}
+  .lineup img,.lineup svg{
+    width:62px;height:62px;border-radius:15px;
+    box-shadow:0 1px 2px rgba(0,0,0,.05),0 8px 18px -10px rgba(0,0,0,.2);
+    transition:transform .35s var(--ease),box-shadow .35s var(--ease);
+  }
+  .lineup a:hover img,.lineup a:hover svg{
+    transform:translateY(-4px) scale(1.04);
+    box-shadow:0 2px 5px rgba(0,0,0,.07),0 14px 26px -12px rgba(0,0,0,.24);
+  }
+  .lineup span{font-size:11.5px;color:var(--ink-3);text-align:center;letter-spacing:0}
+  .statsline{margin-top:52px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-3)}
+  .statsline b{color:var(--ink);font-weight:600}
+  .dot{color:var(--hair-2)}
+
+  /* ============ 区块 ============ */
+  section{padding:104px 0 0}
+  .sec-head{margin-bottom:32px}
+  .sec-head h2{font-size:clamp(28px,3.4vw,38px);line-height:1.15;font-weight:600;letter-spacing:-.022em}
+  .sec-head p{margin-top:8px;font-size:17px;color:var(--ink-2)}
+
+  /* ============ 分段控件 ============ */
+  .seg{display:inline-flex;background:var(--fill);border-radius:10px;padding:3px;gap:2px;margin-bottom:24px}
+  .seg button{
+    font:inherit;font-size:13px;letter-spacing:0;padding:6px 15px;border:0;border-radius:8px;
+    background:transparent;color:var(--ink-2);cursor:pointer;transition:.2s;
+  }
+  .seg button:hover{color:var(--ink)}
+  .seg button[aria-pressed="true"]{
+    background:#fff;color:var(--ink);
+    box-shadow:0 1px 3px rgba(0,0,0,.08),0 1px 1px rgba(0,0,0,.04);
+  }
+
+  /* ============ 卡片 ============ */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .card{
+    position:relative;display:flex;flex-direction:column;gap:15px;
+    background:#fff;border:1px solid var(--hair);border-radius:var(--r-lg);
+    padding:26px 26px 22px;box-shadow:var(--shadow);
+    transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .3s;
+  }
+  .card:hover{
+    transform:translateY(-3px);border-color:var(--hair-2);
+    box-shadow:0 2px 6px rgba(0,0,0,.05),0 22px 40px -20px rgba(0,0,0,.2);
+  }
+  .card.hide{display:none}
+  .card-top{display:flex;align-items:center;gap:13px}
+  .card-top img,.card-top svg{
+    width:52px;height:52px;border-radius:13px;flex:none;
+    box-shadow:0 1px 2px rgba(0,0,0,.05),0 4px 10px -6px rgba(0,0,0,.16);
+  }
+  .card h3{font-size:18.5px;font-weight:600;letter-spacing:-.015em;line-height:1.25}
+  .pkg{
+    font-size:11.5px;color:var(--ink-3);letter-spacing:0;margin-top:2px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  .pill{display:inline-block;font-size:11px;letter-spacing:0;color:var(--ink-2);background:var(--fill);border-radius:6px;padding:2px 7px;margin-left:7px;vertical-align:2px;font-weight:400}
+  .desc{font-size:15px;line-height:1.6;color:var(--ink-2);letter-spacing:-.008em}
+  .desc b{color:var(--ink);font-weight:500}
+  .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tags span{font-size:11.5px;letter-spacing:0;color:var(--ink-2);background:var(--fill);border-radius:7px;padding:3px 9px;white-space:nowrap}
+  .card-links{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+  .card-links a{font-size:14px;color:var(--link);display:inline-flex;align-items:center;gap:4px}
+  .card-links a:hover{text-decoration:underline}
+  .card-links a.mute{color:var(--ink-3)}
+  .card-links a.mute:hover{color:var(--ink-2);text-decoration:none}
+
+  /* ============ 下载列表 ============ */
+  .rows{border-top:1px solid var(--hair)}
+  .row{display:flex;align-items:center;gap:16px;padding:20px 4px;border-bottom:1px solid var(--hair);transition:background .2s}
+  .row:hover{background:var(--fill)}
+  .row-txt{min-width:0;flex:1}
+  .row-txt b{display:block;font-size:16px;font-weight:500;letter-spacing:-.01em}
+  .row-txt span{display:block;font-size:13px;color:var(--ink-3);letter-spacing:0;margin-top:2px}
+  .row-meta{margin-left:auto;flex:none;font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums;letter-spacing:0}
+  .row-go{
+    flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+    color:var(--ink-3);border:1px solid var(--hair-2);transition:.2s;
+  }
+  .row:hover .row-go{color:var(--ink);border-color:var(--ink-3)}
+
+  /* ============ 联系 ============ */
+  .contact{text-align:center;padding-bottom:6px}
+  .contact h2{font-size:clamp(28px,3.4vw,38px);font-weight:600;letter-spacing:-.022em;line-height:1.15}
+  .contact p{margin:14px auto 0;max-width:520px;font-size:17px;color:var(--ink-2)}
+  .contact .cta{margin-top:28px}
+  .fineprint{margin:44px auto 0;font-size:13px;color:var(--ink-3);line-height:1.6;max-width:620px}
+  .fineprint b{color:var(--ink-2);font-weight:500}
+
+  footer{margin-top:88px;border-top:1px solid var(--hair);padding:26px 0 46px;font-size:12px;color:var(--ink-3);letter-spacing:0}
+  .foot-in{max-width:1000px;margin:0 auto;padding:0 24px;display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap}
+  .foot-in a{color:var(--ink-2)}
+  .foot-in a:hover{color:var(--ink);text-decoration:underline}
+
+  /* ============ toast ============ */
+  #toast{
+    position:fixed;left:50%;bottom:34px;transform:translate(-50%,14px);
+    background:rgba(29,29,31,.92);color:#fff;
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    padding:11px 20px;border-radius:980px;font-size:13.5px;letter-spacing:0;
+    opacity:0;pointer-events:none;transition:opacity .25s,transform .25s var(--ease);
+    z-index:60;white-space:nowrap;
+  }
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* ============ 入场（纯 CSS，JS 挂了也不影响） ============ */
+  .rise{animation:rise .75s var(--ease) both;animation-delay:calc(var(--i,0) * 50ms)}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){
+    .rise{animation:none}
+    html{scroll-behavior:auto}
+    .card,.btn,.lineup img,.lineup svg{transition:none}
+  }
+
+  /* ============ 响应式 ============ */
+  @media (max-width:860px){
+    .grid{grid-template-columns:1fr}
+    .hero{padding-top:64px}
+    section{padding-top:84px}
+    .nav-links{gap:16px}
+  }
+  @media (max-width:620px){
+    .wrap{padding:0 20px}
+    .nav-in{padding:0 20px;gap:14px}
+    .face{width:78px;height:78px}
+    .lead{font-size:18px}
+    .lineup{gap:14px;margin-top:44px}
+    .lineup a{width:60px}
+    .lineup img,.lineup svg{width:52px;height:52px;border-radius:13px}
+    .lineup span{font-size:10.5px}
+    .row{padding:17px 4px}
+    .row-meta{display:none}
+    .card{padding:22px 20px 18px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 导航 ================= -->
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top">
+      <img src="assets/avatar.jpg" alt="">
+      Yon ying
+    </a>
+    <nav class="nav-links">
+      <a href="#tools">工具</a>
+      <a href="#downloads">下载</a>
+      <a href="#contact">联系</a>
+      <a href="https://github.com/ekamalbekuulu-ai" target="_blank" rel="noopener">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= Hero ================= -->
+  <div class="wrap">
+    <section class="hero" style="padding-top:88px">
+      <img class="face rise" src="assets/avatar.jpg" alt="Yon ying 的头像">
+      <p class="who rise"><b>Yon ying</b> · 白天上班，晚上折腾安卓</p>
+
+      <h1 class="rise">自己写的小工具<br><em>都放这儿了</em></h1>
+
+      <p class="lead rise">
+        手机是我主要的开发环境，所以工具也都长在手机上：
+        能编译 App 的 IDE、会自己动手的 AI 助手、拆 APK 的工具箱，
+        还有一个专门做开机动画的。都是自己用着顺手才写的，源码都公开了。
+      </p>
+
+      <div class="cta rise">
+        <a class="btn" href="#tools">看看都是啥</a>
+        <a class="textlink" href="#downloads">直接下载 <span>›</span></a>
+      </div>
+
+      <div class="lineup rise">
+        <a href="#tool-xiaoxia">
+          <img src="assets/icons/xiaoxia.svg" alt="小匣">
+          <span>小匣</span>
+        </a>
+        <a href="#tool-st">
+          <img src="assets/icons/st-manager.png" alt="ST 管理器">
+          <span>ST 管理器</span>
+        </a>
+        <a href="#tool-yoyo">
+          <img src="assets/icons/yoyo-iade.png" alt="YoYo iade">
+          <span>YoYo iade</span>
+        </a>
+        <a href="#tool-boot">
+          <img src="assets/icons/bootanim.svg" alt="开机动画">
+          <span>开机动画</span>
+        </a>
+        <a href="#tool-kotlin">
+          <img src="assets/icons/kotlin-plugin.svg" alt="Kotlin 插件">
+          <span>Kotlin</span>
+        </a>
+      </div>
+
+      <p class="statsline rise">
+        <span><b>5</b> 个项目</span><span class="dot">·</span>
+        <span><b>4</b> 个装得上</span><span class="dot">·</span>
+        <span><b>90+</b> 个工具</span><span class="dot">·</span>
+        <span>一分钱不收</span>
+      </p>
+    </section>
+
+    <!-- ================= 工具 ================= -->
+    <section id="tools">
+      <div class="sec-head rise">
+        <h2>都有什么</h2>
+        <p>点进去就是源码，README 里写了怎么编、怎么装。</p>
+      </div>
+
+      <div class="seg rise" id="seg">
+        <button data-filter="all" aria-pressed="true">全部</button>
+        <button data-filter="app" aria-pressed="false">装手机上的</button>
+        <button data-filter="dev" aria-pressed="false">写代码用的</button>
+      </div>
+
+      <div class="grid" id="grid">
+
+        <article class="card rise" id="tool-xiaoxia" data-cat="app">
+          <div class="card-top">
+            <img src="assets/icons/xiaoxia.svg" alt="小匣图标">
+            <div>
+              <h3>小匣 <span class="pill">我常用</span></h3>
+              <div class="pkg">com.iade.xiaoxia · 1.0</div>
+            </div>
+          </div>
+          <p class="desc">
+            本来只想做个聊天界面，结果工具越塞越多，最后攒到 <b>90 个</b>：
+            读文件、跑命令、抓网页、装应用、点屏幕都行。
+            模型随便换，key 就存在你自己手机里。
+          </p>
+          <div class="tags"><span>Agent 循环</span><span>工具调用</span><span>插件</span><span>无障碍</span></div>
+          <div class="card-links">
+            <a href="https://github.com/ekamalbekuulu-ai/XiaoXia" target="_blank" rel="noopener">看源码</a>
+            <a class="mute" href="https://github.com/ekamalbekuulu-ai/XiaoXia#readme" target="_blank" rel="noopener">怎么用</a>
+            <a class="mute" href="https://github.com/ekamalbekuulu-ai/XiaoXia/issues" target="_blank" rel="noopener">提问题</a>
+          </div>
+        </article>
+
+        <article class="card rise" id="tool-st" data-cat="app">
+          <div class="card-top">
+            <img src="assets/icons/st-manager.png" alt="ST 管理器图标">
+            <div>
+              <h3>ST 管理器</h3>
+              <div class="pkg">com.example.filemanager · 1.1</div>
+            </div>
+          </div>
+          <p class="desc">
+            先是个文件管理器，后来顺手把反编译、改 dex、改资源、签名都做进去了。
+            干逆向的都懂，能少切一个 App 是一个。
+          </p>
+          <div class="tags"><span>smali</span><span>dex</span><span>ARSC</span><span>jadx</span><span>签名</span></div>
+          <div class="card-links">
+            <a href="https://github.com/ekamalbekuulu-ai/ST-Manager" target="_blank" rel="noopener">看源码</a>
+            <a class="mute" href="https://github.com/ekamalbekuulu-ai/ST-Manager/blob/main/文件管理器融合版_源码文件清单.md" target="_blank" rel="noopener">模块清单</a>
+          </div>
+        </article>
+
+        <article class="card rise" id="tool-yoyo" data-cat="dev">
+          <div class="card-top">
+            <img src="assets/icons/yoyo-iade.png" alt="YoYo iade 图标">
+            <div>
+              <h3>YoYo iade</h3>
+              <div class="pkg">com.yoyo.iade · 3.0</div>
+            </div>
+          </div>
+          <p class="desc">
+            没电脑的时候想改两行代码太难受，干脆把 aapt、javac、d8、apksigner
+            全塞进手机。写 Java、出 APK、装上去，<b>不用 root</b>。
+          </p>
+          <div class="tags"><span>手机端 IDE</span><span>Java</span><span>一键编译</span><span>自动签名</span></div>
+          <div class="card-links">
+            <a href="https://github.com/ekamalbekuulu-ai/yoyo-iade" target="_blank" rel="noopener">看源码</a>
+            <a class="mute" href="https://github.com/ekamalbekuulu-ai/yoyo-iade/tree/main/assets/docs/fqa" target="_blank" rel="noopener">文档</a>
+          </div>
+        </article>
+
+        <article class="card rise" id="tool-boot" data-cat="app">
+          <div class="card-top">
+            <img src="assets/icons/bootanim.svg" alt="开机动画图标">
+            <div>
+              <h3>一键制作开机动画</h3>
+              <div class="pkg">com.yoyo.kjdh · 4.1</div>
+            </div>
+          </div>
+          <p class="desc">
+            把喜欢的视频丢进去，抽帧、压图、写 desc.txt，出来一个 bootanimation.zip。
+            root 之后刷进 /system/media，开机就是它。
+          </p>
+          <div class="tags"><span>ffmpeg</span><span>bootanimation</span><span>要 root</span><span>arm64</span></div>
+          <div class="card-links">
+            <a href="https://github.com/ekamalbekuulu-ai/BootAnimation-Maker" target="_blank" rel="noopener">看源码</a>
+            <a class="mute" href="https://github.com/ekamalbekuulu-ai/BootAnimation-Maker#readme" target="_blank" rel="noopener">怎么用</a>
+          </div>
+        </article>
+
+        <article class="card rise" id="tool-kotlin" data-cat="dev">
+          <div class="card-top">
+            <img src="assets/icons/kotlin-plugin.svg" alt="Kotlin 插件图标">
+            <div>
+              <h3>Kotlin 编译插件 <span class="pill">补丁</span></h3>
+              <div class="pkg">com.yoyo.iade.plugin.kotlin</div>
+            </div>
+          </div>
+          <p class="desc">
+            YoYo iade 原来只会 Java，我给它补了个 Kotlin 编译器。
+            没有界面，装完就能在手机上写 .kt。
+          </p>
+          <div class="tags"><span>Kotlin 2.4.20</span><span>kotlinc</span><span>41 个 jar</span></div>
+          <div class="card-links">
+            <a href="https://github.com/ekamalbekuulu-ai/yoyo-kotlin-plugin" target="_blank" rel="noopener">看源码</a>
+            <a class="mute" href="https://github.com/ekamalbekuulu-ai/yoyo-kotlin-plugin/blob/main/README.md" target="_blank" rel="noopener">jar 清单</a>
+          </div>
+        </article>
+
+        <article class="card rise" data-cat="dev">
+          <div class="card-top">
+            <div style="width:52px;height:52px;border-radius:13px;flex:none;background:var(--fill);display:grid;place-items:center;border:1px solid var(--hair)">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="#1d1d1f" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            </div>
+            <div>
+              <h3>全都在这儿</h3>
+              <div class="pkg">github.com/ekamalbekuulu-ai</div>
+            </div>
+          </div>
+          <p class="desc">
+            五个项目一个账号，想一次翻完就从这儿进。仓库都能提 Issue，我看到就会回。
+          </p>
+          <div class="tags"><span>GitHub</span><span>Issues</span><span>Releases</span></div>
+          <div class="card-links">
+            <a href="https://github.com/ekamalbekuulu-ai" target="_blank" rel="noopener">打开主页</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ================= 下载 ================= -->
+    <section id="downloads">
+      <div class="sec-head rise">
+        <h2>顺手拿点东西</h2>
+        <p>缺哪个拿哪个，都是一次性的文件，不用注册。</p>
+      </div>
+
+      <div class="rows rise">
+        <a class="row" href="https://github.com/ekamalbekuulu-ai/yoyo-iade/releases/download/env-1.0/env.zip">
+          <span class="row-txt">
+            <b>YoYo iade 的编译环境</b>
+            <span>aapt、JDK 17、d8、apksigner、android.jar 都在里面，解压进 assets 就能编译</span>
+          </span>
+          <span class="row-meta">194 MiB</span>
+          <span class="row-go"><svg class="ico-s" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17V3"/><path d="m6 11 6 6 6-6"/><path d="M19 21H5"/></svg></span>
+        </a>
+        <a class="row" href="https://github.com/ekamalbekuulu-ai/yoyo-iade/releases" target="_blank" rel="noopener">
+          <span class="row-txt">
+            <b>所有版本</b>
+            <span>环境包和历史版本都在 Releases 里</span>
+          </span>
+          <span class="row-go"><svg class="ico-s" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span>
+        </a>
+        <a class="row" href="https://github.com/ekamalbekuulu-ai/yoyo-iade/tree/main/assets/docs/fqa" target="_blank" rel="noopener">
+          <span class="row-txt">
+            <b>FQA 文档</b>
+            <span>环境、编译失败、签名、权限、崩溃排查，一共 14 篇</span>
+          </span>
+          <span class="row-go"><svg class="ico-s" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span>
+        </a>
+        <a class="row" href="https://raw.githubusercontent.com/ekamalbekuulu-ai/ST-Manager/main/assets/smali_commands.txt" target="_blank" rel="noopener">
+          <span class="row-txt">
+            <b>smali 指令手册</b>
+            <span>ST 管理器里内置的那份速查表，单独存了一份</span>
+          </span>
+          <span class="row-go"><svg class="ico-s" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span>
+        </a>
+        <a class="row" href="https://github.com/ekamalbekuulu-ai/ST-Manager/tree/main/assets/language" target="_blank" rel="noopener">
+          <span class="row-txt">
+            <b>语法高亮配置</b>
+            <span>Java、Kotlin、smali、Python、Rust、C、C++、JS 等 16 种</span>
+          </span>
+          <span class="row-go"><svg class="ico-s" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ================= 联系 ================= -->
+    <section id="contact" class="contact">
+      <h2 class="rise">用着不对？直接找我</h2>
+      <p class="rise">群里问最快，人多；邮件我基本都会回，就是可能慢一点。</p>
+
+      <div class="cta rise">
+        <a class="btn" href="mailto:2667900199@qq.com">
+          <svg class="ico-s" viewBox="0 0 24 24" aria-hidden="true"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+          发邮件
+        </a>
+        <button class="btn ghost" data-copy="282592755">
+          <svg class="ico-s" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12.5c0 3.6-3.6 6.5-8 6.5-1 0-2-.14-2.9-.4L4 20l1.2-3.2C4.45 15.7 4 14.2 4 12.5 4 8.9 7.6 6 12 6s8 2.9 8 6.5Z"/></svg>
+          复制群号 282592755
+        </button>
+        <button class="btn ghost" data-copy="2667900199@qq.com">
+          <svg class="ico-s" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+          复制邮箱
+        </button>
+      </div>
+
+      <p class="fineprint rise">
+        东西都是空闲时间写的，没有账号、没有广告，也不打算收费。<br>
+        涉及逆向、root、刷机的请只在自己的设备上折腾——
+        <b>刷坏了、改别人的包出事，都得自己担着</b>。
+        许可证还没写，要商用先问我一句。
+      </p>
+    </section>
+  </div>
+
+  <footer>
+    <div class="foot-in">
+      <span>© <span id="year">2026</span> Yon ying · 更新不快，但都在 · 纯静态页面，没后端</span>
+      <span>
+        <a href="#top">回到顶部</a> ·
+        <a href="https://github.com/ekamalbekuulu-ai" target="_blank" rel="noopener">GitHub</a> ·
+        <a href="mailto:2667900199@qq.com">邮箱</a>
+      </span>
+    </div>
+  </footer>
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* 复制 */
+  var toast = document.getElementById("toast"), timer = null;
+  function pop(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(timer);
+    timer = setTimeout(function () { toast.classList.remove("show"); }, 1800);
+  }
+  function copy(text) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.top = "-1000px";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy") ? resolve() : reject(new Error("fail")); }
+      catch (e) { reject(e); }
+      finally { document.body.removeChild(ta); }
+    });
+  }
+  document.querySelectorAll("[data-copy]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      var v = el.getAttribute("data-copy");
+      copy(v).then(function () { pop("已复制 " + v); },
+                  function () { pop("复制不了，手选一下吧：" + v); });
+    });
+  });
+
+  /* 筛选 */
+  var seg = document.getElementById("seg");
+  var cards = Array.prototype.slice.call(document.querySelectorAll("#grid .card"));
+  seg.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-filter]");
+    if (!btn) return;
+    var f = btn.getAttribute("data-filter");
+    seg.querySelectorAll("button").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b === btn));
+    });
+    cards.forEach(function (c) {
+      c.classList.toggle("hide", !(f === "all" || c.getAttribute("data-cat") === f));
+    });
+  });
+
+  /* 入场延迟（纯装饰） */
+  document.querySelectorAll(".rise").forEach(function (el, i) {
+    el.style.setProperty("--i", String(i));
+  });
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
