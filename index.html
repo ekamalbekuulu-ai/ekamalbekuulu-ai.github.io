@@ -243,9 +243,183 @@
   @media (prefers-reduced-motion:reduce){
     *{animation:none !important;transition:none !important}
   }
+
+  /* ============================================================
+     手机端：改成 iOS 的样子（不缩小 macOS）
+     ============================================================ */
+  .only-mobile{display:none}
+
+  @media (max-width:640px){
+    .only-mobile{display:block}
+    .menubar,.dock,.titlebar,.sidebar,.hero-top .who span{display:none}
+
+    html,body{height:auto}
+    body{
+      overflow-y:auto;overflow-x:hidden;
+      background:#f2f2f7;
+      font-size:15px;
+      padding-top:44px;
+      padding-bottom:calc(58px + env(safe-area-inset-bottom));
+      -webkit-font-smoothing:antialiased;
+    }
+    body::before,body::after{display:none}
+
+    /* 状态栏 */
+    .ios-status{
+      position:fixed;top:0;left:0;right:0;height:44px;z-index:90;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 20px 0 26px;
+      font-size:14px;font-weight:600;color:#000;
+      background:rgba(242,242,247,.82);
+      -webkit-backdrop-filter:saturate(180%) blur(20px);
+      backdrop-filter:saturate(180%) blur(20px);
+    }
+    .ios-status .st-time{letter-spacing:.01em;font-variant-numeric:tabular-nums}
+    .ios-status .st-right{display:flex;align-items:center;gap:5px}
+    .ios-status .st-right svg{height:11px;width:auto;fill:#000}
+
+    /* 导航栏 */
+    .ios-nav{
+      position:fixed;top:44px;left:0;right:0;height:44px;z-index:89;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 16px;
+      background:rgba(242,242,247,.82);
+      -webkit-backdrop-filter:saturate(180%) blur(20px);
+      backdrop-filter:saturate(180%) blur(20px);
+      border-bottom:.5px solid rgba(0,0,0,.14);
+    }
+    .ios-nav-title{font-size:17px;font-weight:600;letter-spacing:-.02em}
+    .ios-nav-action{font-size:15px;color:#007aff}
+
+    /* 主体：铺满、无窗口 */
+    .stage{padding:44px 0 0;height:auto;display:block;background:transparent}
+    .window{
+      height:auto;max-width:none;width:100%;
+      background:transparent;border:0;border-radius:0;box-shadow:none;
+      -webkit-backdrop-filter:none;backdrop-filter:none;
+      animation:none;overflow:visible;
+    }
+    .win-body{display:block;min-width:0}
+    .content{
+      overflow:visible;overflow-x:hidden;padding:0;max-width:100%;
+      -webkit-mask-image:none;mask-image:none;
+    }
+
+    /* 每个区块 = iOS 分组 */
+    .pane{padding:0 16px;margin-top:24px;max-width:none}
+    .pane:first-child{margin-top:6px}
+
+    h1{font-size:34px;line-height:1.1;letter-spacing:-.03em;font-weight:700}
+    h1 em{color:#8e8e93}
+    h2{
+      font-size:13px;font-weight:600;color:#6e6e73;letter-spacing:.02em;
+      text-transform:uppercase;margin:0 0 8px;padding-left:4px;
+    }
+    .sub{font-size:15px;color:#3c3c43;line-height:1.5;margin-top:10px;max-width:none}
+    .pane > .sub:first-of-type{color:#6e6e73;font-size:13px;margin-top:6px}
+
+    /* 按钮：iOS 全宽 / 半宽 */
+    .row-actions{gap:10px;margin-top:18px}
+    .btn{
+      height:48px;border-radius:12px;font-size:16px;font-weight:600;
+      flex:1 1 auto;background:#007aff;box-shadow:0 1px 2px rgba(0,122,255,.25);
+    }
+    .btn.ghost{background:rgba(120,120,128,.12);color:#007aff;box-shadow:none;border:0}
+
+    /* 数据条 = iOS 分组行 */
+    .stats{
+      display:grid;grid-template-columns:1fr 1fr;gap:0;
+      background:#fff;border-radius:12px;margin-top:16px;padding:0;overflow:hidden;
+      box-shadow:0 1px 2px rgba(0,0,0,.03);
+    }
+    .stats span{
+      display:flex;align-items:baseline;gap:6px;
+      padding:13px 16px;font-size:14px;color:#3c3c43;
+      border-bottom:.5px solid rgba(0,0,0,.1);
+    }
+    .stats span:nth-child(odd){border-right:.5px solid rgba(0,0,0,.1)}
+    .stats span:nth-last-child(-n+2){border-bottom:0}
+    .stats b{font-size:17px;font-weight:600;color:#000}
+
+    /* 工具卡片 = iOS 列表组 */
+    .cards{display:block;background:#fff;border-radius:12px;overflow:hidden;margin-top:8px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+    .tcard{
+      display:flex;flex-direction:column;gap:6px;
+      padding:14px 16px;border-radius:0;border:0;border-bottom:.5px solid rgba(0,0,0,.1);
+      background:#fff;box-shadow:none;transform:none !important;
+    }
+    .tcard:last-child{border-bottom:0}
+    .tcard .top img{width:34px;height:34px;border-radius:8px}
+    .tcard h3{font-size:16px}
+    .tcard .pkg{font-size:11.5px;color:#8e8e93}
+    .tcard p{font-size:13.5px;color:#3c3c43;line-height:1.45}
+    .tcard .links a{font-size:14px;color:#007aff}
+    .tags span{background:rgba(120,120,128,.12);color:#3c3c43}
+
+    /* 日志 */
+    .log{background:#fff;border-radius:12px;overflow:hidden;margin-top:8px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+    .log-item{grid-template-columns:1fr;gap:3px;padding:13px 16px;border-bottom:.5px solid rgba(0,0,0,.1)}
+    .log-item:last-child{border-bottom:0}
+    .log-date{font-size:11.5px;color:#8e8e93;font-family:var(--font);letter-spacing:.01em}
+    .log-body h4{font-size:15px}
+    .log-body p{font-size:13.5px;color:#3c3c43}
+
+    /* 预览 */
+    .preview{display:block;margin-top:8px}
+    .browser{border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+    .phone{display:none}
+
+    /* 赞赏 */
+    .qrs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+    .qrs figure{
+      border:.5px solid rgba(0,0,0,.08);border-radius:12px;padding:12px 10px;
+      background:#fff;text-align:center;
+    }
+    .qrs img{width:100%;max-width:140px;height:auto;margin:0 auto;border-radius:8px}
+    .qrs figcaption{font-size:12px;color:#8e8e93;margin-top:8px}
+
+    /* 底部标签栏 */
+    .ios-tabbar{
+      position:fixed;left:0;right:0;bottom:0;z-index:95;
+      height:calc(50px + env(safe-area-inset-bottom));
+      padding-bottom:env(safe-area-inset-bottom);
+      display:flex;align-items:stretch;
+      background:rgba(249,249,249,.92);
+      -webkit-backdrop-filter:saturate(180%) blur(20px);
+      backdrop-filter:saturate(180%) blur(20px);
+      border-top:.5px solid rgba(0,0,0,.16);
+    }
+    .ios-tabbar .tab{
+      flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+      font-size:10px;color:#8e8e93;letter-spacing:0;
+    }
+    .ios-tabbar .tab svg{
+      width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;
+      stroke-linecap:round;stroke-linejoin:round;
+    }
+    .ios-tabbar .tab.on{color:#007aff}
+    .ios-tabbar .tab:active{opacity:.6}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important}
+  }
 </style>
 </head>
 <body>
+<div class="ios-status only-mobile">
+  <span class="st-time" id="st-time">9:41</span>
+  <span class="st-right">
+    <svg viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+    <svg viewBox="0 0 16 12" aria-hidden="true"><path d="M8 10.5a1.4 1.4 0 1 1 0-2.8 1.4 1.4 0 0 1 0 2.8Zm-3.2-4a5.2 5.2 0 0 1 6.4 0l-1 1.2a3.6 3.6 0 0 0-4.4 0l-1-1.2Zm-2.4-2.6a8.6 8.6 0 0 1 11.2 0l-1 1.2a7 7 0 0 0-9.2 0l-1-1.2Z"/></svg>
+    <svg viewBox="0 0 26 12" aria-hidden="true"><rect x="0.5" y="0.5" width="21" height="11" rx="3.2" fill="none" stroke="currentColor"/><rect x="2.2" y="2.2" width="16" height="7.6" rx="2"/><path d="M23.6 4v4a2.2 2.2 0 0 0 0-4Z"/></svg>
+  </span>
+</div>
+
+<div class="ios-nav only-mobile">
+  <span class="ios-nav-title">Yon ying</span>
+  <a class="ios-nav-action" href="https://github.com/ekamalbekuulu-ai" target="_blank" rel="noopener">GitHub</a>
+</div>
 
 <header class="menubar">
   <svg class="apple" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -518,6 +692,58 @@
     if (img.complete) show(); else img.addEventListener('load', show);
   });
 })();
+
+  /* ---------- 手机端：状态栏时间 + Tab 高亮 ---------- */
+  (function(){
+    var st = document.getElementById('st-time');
+    function clock(){
+      if (!st) return;
+      var d = new Date();
+      st.textContent = d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+    }
+    clock(); setInterval(clock, 20000);
+
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.ios-tabbar .tab'));
+    tabs.forEach(function(a){
+      a.addEventListener('click', function(e){
+        var id = a.getAttribute('href');
+        var target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior:'smooth', block:'start' });
+        tabs.forEach(function(x){ x.classList.remove('on'); });
+        a.classList.add('on');
+      });
+    });
+    window.addEventListener('scroll', function(){
+      var y = window.scrollY + 140;
+      var cur = tabs[0];
+      tabs.forEach(function(a){
+        var t = document.querySelector(a.getAttribute('href'));
+        if (t && y >= t.offsetTop) cur = a;
+      });
+      tabs.forEach(function(x){ x.classList.remove('on'); });
+      if (cur) cur.classList.add('on');
+    }, { passive:true });
+  })();
 </script>
+<nav class="ios-tabbar only-mobile" role="tablist">
+  <a class="tab on" href="#top" data-tab="top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/></svg>
+    <span>首页</span>
+  </a>
+  <a class="tab" href="#tools" data-tab="tools">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
+    <span>工具</span>
+  </a>
+  <a class="tab" href="#log" data-tab="log">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+    <span>更新</span>
+  </a>
+  <a class="tab" href="#support" data-tab="support">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.6-7 9-7 9Z"/></svg>
+    <span>支持</span>
+  </a>
+</nav>
 </body>
 </html>
