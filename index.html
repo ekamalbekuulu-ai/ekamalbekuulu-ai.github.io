@@ -210,7 +210,11 @@
     background:#f5f5f7;border-bottom:1px solid var(--line);
   }
   .browser-bar .dots{display:flex;gap:6px;flex:none}
-  .browser-bar .dots i{width:9px;height:9px;border-radius:50%;background:#d2d2d7;display:block}
+  .browser-bar .dots i{width:10px;height:10px;border-radius:50%;display:block}
+  .browser-bar .dots i:nth-child(1){background:#ff5f57}
+  .browser-bar .dots i:nth-child(2){background:#febc2e}
+  .browser-bar .dots i:nth-child(3){background:#28c840}
+  .browser-bar .dots i{box-shadow:inset 0 0 0 .5px rgba(0,0,0,.12)}
   .browser-bar .url{
     font-size:11.5px;color:var(--ink-3);background:#fff;border-radius:6px;
     padding:3px 12px;margin:0 auto;max-width:260px;overflow:hidden;
@@ -231,6 +235,43 @@
     .shots{grid-template-columns:1fr;gap:16px}
     .phone{width:200px;justify-self:center}
   }
+
+  /* ============ 上手引导 ============ */
+  .start-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .sstep{
+    border:1px solid var(--line);border-radius:18px;padding:22px 20px;background:#fff;
+    transition:transform .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .sstep:hover{transform:translateY(-3px);box-shadow:0 16px 34px -24px rgba(0,0,0,.35)}
+  .sstep .n{
+    display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;
+    background:var(--blue);color:#fff;font-size:13px;font-weight:600;margin-bottom:12px;
+  }
+  .sstep h3{font-size:16px;margin-bottom:6px}
+  .sstep p{font-size:13.5px;color:var(--ink-2);line-height:1.6}
+  .sstep a{font-size:13px;color:var(--link)}
+
+  /* ============ 更新日志 ============ */
+  .log{border-top:1px solid var(--line)}
+  .log-item{
+    display:grid;grid-template-columns:104px 1fr;gap:18px;
+    padding:18px 0;border-bottom:1px solid var(--line);
+  }
+  .log-date{
+    font-size:12.5px;color:var(--ink-3);font-variant-numeric:tabular-nums;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;padding-top:2px;
+  }
+  .log-body h4{font-size:15px;font-weight:600;margin-bottom:4px}
+  .log-body p{font-size:13.5px;color:var(--ink-2);line-height:1.6}
+  .log-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .log-tags span{
+    font-size:11px;color:var(--ink-2);background:var(--fill);
+    border-radius:6px;padding:2px 8px;letter-spacing:0;
+  }
+  @media (max-width:860px){
+    .start-steps{grid-template-columns:1fr}
+    .log-item{grid-template-columns:1fr;gap:6px}
+  }
   /* ============ 支持（低调） ============ */
   .support{text-align:center;padding-bottom:0}
   .support h2{font-size:19px;font-weight:600;letter-spacing:-.01em;color:var(--ink-2)}
@@ -243,6 +284,133 @@
   .qr img{width:132px;height:132px;border-radius:8px;display:block}
   .qr figcaption{margin-top:7px;font-size:11.5px;color:var(--ink-3);letter-spacing:0}
 
+
+  /* ============ 磨砂玻璃与柔光（Apple 质感） ============ */
+  body::before{
+    content:'';position:fixed;left:-10%;right:-10%;top:-260px;height:1200px;z-index:0;
+    pointer-events:none;
+    background:
+      radial-gradient(560px 340px at 16% 12%, rgba(10,132,255,.20), transparent 72%),
+      radial-gradient(520px 320px at 82% 8%,  rgba(94,92,230,.18), transparent 74%),
+      radial-gradient(460px 300px at 52% 42%, rgba(255,149,0,.10), transparent 72%),
+      radial-gradient(520px 340px at 30% 78%, rgba(48,209,88,.08), transparent 74%);
+    filter: blur(64px) saturate(120%);
+    animation: aurora 26s ease-in-out infinite alternate;
+  }
+  @keyframes aurora{
+    from{transform:translate3d(0,0,0) scale(1)}
+    to{transform:translate3d(0,34px,0) scale(1.05)}
+  }
+  .wrap, footer{position:relative;z-index:1}
+
+  /* 卡片做磨砂 */
+  .card,
+  .feature,
+  .plain-card,
+  .sstep{
+    background:rgba(255,255,255,.72);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    backdrop-filter:saturate(180%) blur(20px);
+  }
+  .card:hover,
+  .sstep:hover{
+    background:rgba(255,255,255,.86);
+  }
+
+  /* 导航更"厚"的玻璃 */
+  .nav{
+    background:rgba(255,255,255,.66);
+    -webkit-backdrop-filter:saturate(200%) blur(24px);
+    backdrop-filter:saturate(200%) blur(24px);
+  }
+
+  /* 预览窗口的地址栏也磨砂 */
+  .browser-bar{
+    background:rgba(245,245,247,.7);
+    -webkit-backdrop-filter:blur(14px);
+    backdrop-filter:blur(14px);
+  }
+
+  /* 分隔线与列表行：悬浮时轻微玻璃化 */
+  .row:hover{
+    background:rgba(255,255,255,.6);
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+  }
+
+  /* 尊重系统"减少动态效果" */
+  @media (prefers-reduced-motion: reduce){
+    body::before{animation:none}
+  }
+
+  /* ============ 细节：滚动条 / 选中 / 点按 ============ */
+  html{scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.26) transparent}
+  ::-webkit-scrollbar{width:11px;height:11px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{
+    background:rgba(0,0,0,.22);
+    border-radius:999px;
+    border:3px solid transparent;
+    background-clip:content-box;
+    transition:background .2s;
+  }
+  ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.4);background-clip:content-box}
+  ::-webkit-scrollbar-corner{background:transparent}
+  ::selection{background:rgba(0,113,227,.16);color:var(--ink)}
+  *{-webkit-tap-highlight-color:transparent}
+  img,svg{-webkit-user-drag:none}
+
+  /* 阅读进度条 */
+  #progress{
+    position:fixed;left:0;top:0;height:2px;width:0;z-index:60;
+    background:linear-gradient(90deg,var(--accent2),var(--accent));
+    transition:width .12s linear;
+    pointer-events:none;
+  }
+
+  /* 导航滚动态 */
+  .nav{transition:box-shadow .3s var(--ease),background .3s var(--ease)}
+  .nav.scrolled{
+    background:rgba(255,255,255,.82);
+    box-shadow:0 1px 0 rgba(0,0,0,.05), 0 8px 24px -20px rgba(0,0,0,.4);
+  }
+
+  /* 链接下划线滑入 */
+  .mini a,.foot-in a,.nav-links a{
+    position:relative;
+    transition:color .2s;
+  }
+  .mini a::after,.foot-in a::after{
+    content:'';position:absolute;left:0;right:0;bottom:-2px;height:1px;
+    background:currentColor;transform:scaleX(0);transform-origin:left;
+    transition:transform .28s var(--ease);
+  }
+  .mini a:hover::after,.foot-in a:hover::after{transform:scaleX(1)}
+
+  /* 列表行悬浮位移 */
+  .row{transition:background .2s,transform .25s var(--ease)}
+  .row:hover{transform:translateX(2px)}
+
+  /* 卡片入场错峰 */
+  .card,.sstep{transition:transform .32s var(--ease),box-shadow .32s var(--ease),background .3s}
+  .card:active,.btn:active{transform:scale(.99)}
+
+  /* 按钮按下 */
+  .btn{transition:background .2s,transform .15s var(--ease),box-shadow .25s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0) scale(.98)}
+
+  /* 图片淡入 */
+  .shots img,.phone img{
+    opacity:0;transform:translateY(6px);
+    transition:opacity .6s var(--ease),transform .6s var(--ease);
+  }
+  .shots img.loaded,.phone img.loaded{opacity:1;transform:none}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001s !important;transition-duration:.001s !important}
+    .row:hover{transform:none}
+  }
   footer{margin-top:88px;border-top:1px solid var(--hair);padding:26px 0 46px;font-size:12px;color:var(--ink-3);letter-spacing:0}
   .foot-in{max-width:1000px;margin:0 auto;padding:0 24px;display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap}
   .foot-in a{color:var(--ink-2)}
@@ -291,6 +459,7 @@
 </style>
 </head>
 <body>
+<div id="progress" aria-hidden="true"></div>
 
 <!-- ================= 导航 ================= -->
 <header class="nav">
@@ -302,6 +471,7 @@
     <nav class="nav-links">
       <a href="#tools">工具</a>
       <a href="#preview">预览</a>
+      <a href="#log">更新</a>
       <a href="#downloads">下载</a>
       <a href="#contact">联系</a>
       <a href="https://github.com/ekamalbekuulu-ai" target="_blank" rel="noopener">
@@ -520,6 +690,65 @@
       </div>
     </section>
 
+    <!-- ================= 上手 ================= -->
+    <section id="start">
+      <div class="sec-head rise">
+        <h2>三分钟上手</h2>
+        <p>不用懂 Git，也不用装软件，会点鼠标就行。</p>
+      </div>
+      <div class="start-steps rise">
+        <div class="sstep">
+          <span class="n">1</span>
+          <h3>拿一串密钥</h3>
+          <p>在 PageDrop 里点「打开 GitHub 生成密钥」，权限已经预填好了，登录后点一下绿色按钮就行。</p>
+        </div>
+        <div class="sstep">
+          <span class="n">2</span>
+          <h3>把网页丢进去</h3>
+          <p>单个 HTML、整个文件夹、或者一个 zip 都行。解压、建仓库、提交，它都替你做。</p>
+        </div>
+        <div class="sstep">
+          <span class="n">3</span>
+          <h3>等一分钟拿网址</h3>
+          <p>它会自动开好 GitHub Pages，构建完就把链接给你。想换自己的域名，页面上也能一步步配。</p>
+          <p style="margin-top:12px"><a href="https://hup.new.tg" target="_blank" rel="noopener">去试试 →</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 更新日志 ================= -->
+    <section id="log">
+      <div class="sec-head rise">
+        <h2>更新日志</h2>
+        <p>想到什么就加什么，不快，但一直在动。</p>
+      </div>
+      <div class="log rise">
+        <div class="log-item">
+          <div class="log-date">2026.11.02</div>
+          <div class="log-body">
+            <h4>PageDrop 上线</h4>
+            <p>填密钥就能把网页部署到 GitHub Pages，不用命令行。顺带做了文件浏览、在线编辑、自定义域名绑定。</p>
+            <div class="log-tags"><span>新项目</span><span>hup.new.tg</span></div>
+          </div>
+        </div>
+        <div class="log-item">
+          <div class="log-date">2026.11.01</div>
+          <div class="log-body">
+            <h4>官网开通，源码全部公开</h4>
+            <p>五个项目一次性开源到 GitHub，这个页面也换成了自己的域名。</p>
+            <div class="log-tags"><span>开源</span><span>yoyo.new.tg</span></div>
+          </div>
+        </div>
+        <div class="log-item">
+          <div class="log-date">2026.10</div>
+          <div class="log-body">
+            <h4>ST 管理器和小匣收尾</h4>
+            <p>ST 管理器补完 APK 工具箱，小匣把内置工具堆到 90 个，两个都能日常用了。</p>
+            <div class="log-tags"><span>ST 管理器</span><span>小匣</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
     <!-- ================= 下载 ================= -->
     <!-- ================= 预览 ================= -->
     <section id="preview">
@@ -702,5 +931,25 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 })();
 </script>
+
+  /* ---------- 细节动效 ---------- */
+  (function(){
+    var bar = document.getElementById('progress');
+    var nav = document.querySelector('.nav');
+    function onScroll(){
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var p = max > 0 ? (h.scrollTop || document.body.scrollTop) / max : 0;
+      if (bar) bar.style.width = (p * 100).toFixed(2) + '%';
+      if (nav) nav.classList.toggle('scrolled', (window.scrollY || h.scrollTop) > 8);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    document.querySelectorAll('.shots img, .phone img').forEach(function(img){
+      if (img.complete) img.classList.add('loaded');
+      else img.addEventListener('load', function(){ img.classList.add('loaded'); });
+    });
+  })();
 </body>
 </html>
