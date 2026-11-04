@@ -36,30 +36,6 @@
     });
   }
 
-  /* ---------------- 图标（内联 SVG，不联网） ---------------- */
-  var TOOL_ICONS = {
-    image: '<path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5z"/><circle cx="8.5" cy="9" r="1.6"/><path d="m21 15-5-5-9 9"/>',
-    img2pdf: '<path d="M6 2.5h7l5 5v12a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 5 19.5v-15A2 2 0 0 1 6 2.5z"/><path d="M13 2.5v5h5"/><path d="M9 16.5h6"/><path d="M12 13.5v6"/>',
-    merge: '<path d="M7 3.5h8l4 4V19a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 7 19z"/><path d="M15 3.5v4h4"/><path d="M10.5 12h4M12.5 10v4"/>',
-    base64: '<path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="M13.5 5.5 10.5 18.5"/>',
-    json: '<path d="M9 3.5H7.5A2 2 0 0 0 5.5 5.5v4A2 2 0 0 1 3.5 11.5a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2H9"/><path d="M15 3.5h1.5a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H15"/>',
-    qr: '<rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1.2"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1.2"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1.2"/><path d="M14 14h2.5v2.5H14zM18 18h2.5v2.5H18zM14 20.5h1.5M20.5 14v1.5"/>',
-    time: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>',
-    color: '<path d="M12 21a9 9 0 1 1 0-18c4.5 0 8 2.7 8 6.2 0 2.2-1.7 3.8-3.9 3.8h-2.4a1.9 1.9 0 0 0-1.4 3.2c.4.4.7 1 .7 1.6 0 1.8-1.3 3.2-3 3.2z"/><circle cx="8" cy="10" r="1.1"/><circle cx="12" cy="7.5" r="1.1"/><circle cx="16" cy="9.5" r="1.1"/>',
-    text: '<path d="M5 6.5V5h14v1.5"/><path d="M12 5v14"/><path d="M9 19h6"/>',
-    hash: '<path d="M5.5 9h14M4.5 15h14"/><path d="M10.5 3.5 8.5 20.5M15.5 3.5l-2 17"/>'
-  };
-
-  function paintIcons(scope) {
-    $$('[data-ico]', scope || document).forEach(function (n) {
-      var key = n.getAttribute('data-ico');
-      var d = TOOL_ICONS[key];
-      if (!d || n.firstChild) return;
-      n.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
-        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
-    });
-  }
-
   /* ---------------- 工具导航：格子 → 进入 → 返回 ---------------- */
   function initToolNav() {
     var grid = document.getElementById('lab-tools-grid');
@@ -79,6 +55,7 @@
       });
       if (!found) return false;
       grid.hidden = true;
+      grid.style.display = 'none';
       stage.classList.add('in-tool');
       try {
         if (push !== false) history.replaceState(null, '', '#tools/' + id.replace(/^lab-/, ''));
@@ -89,6 +66,7 @@
 
     function showGrid() {
       grid.hidden = false;
+      grid.style.display = '';
       stage.classList.remove('in-tool');
       panels.forEach(function (p) { p.classList.remove('on'); });
       try { history.replaceState(null, '', '#tools'); } catch (e) { /* ignore */ }
@@ -105,8 +83,6 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && stage.classList.contains('in-tool')) showGrid();
     });
-
-    paintIcons(grid);
 
     // 支持直接打开 #tools/xxx
     var m = /^#tools\/([\w-]+)$/.exec(location.hash);
@@ -940,27 +916,33 @@
     var toolsRoot = document.getElementById('lab-tools-body');
     if (!gamesRoot && !toolsRoot) return;
 
+    // 导航最先启动：任何一个工具初始化失败，都不能连累格子和点击
+    safe('工具导航', initToolNav);
+
     if (gamesRoot) {
-      Games.init2048(panel('#lab-g2048'));
-      Games.initSnake(panel('#lab-snake'));
-      Games.initMine(panel('#lab-mine'));
+      safe('2048', function () { Games.init2048(panel('#lab-g2048')); });
+      safe('贪吃蛇', function () { Games.initSnake(panel('#lab-snake')); });
     }
     if (toolsRoot) {
-      Tools.initImage(panel('#lab-image'));
-      Tools.initImg2Pdf(panel('#lab-img2pdf'));
-      Tools.initPdfMerge(panel('#lab-pdfmerge'));
-      Tools.initBase64(panel('#lab-base64'));
-      Tools.initJson(panel('#lab-json'));
-      Tools.initQr(panel('#lab-qr'));
-      Tools.initTime(panel('#lab-time'));
-      Tools.initColor(panel('#lab-color'));
-      Tools.initText(panel('#lab-text'));
-      Tools.initHash(panel('#lab-hash'));
+      safe('图片转换', function () { Tools.initImage(panel('#lab-image')); });
+      safe('图片转PDF', function () { Tools.initImg2Pdf(panel('#lab-img2pdf')); });
+      safe('PDF合并', function () { Tools.initPdfMerge(panel('#lab-pdfmerge')); });
+      safe('Base64', function () { Tools.initBase64(panel('#lab-base64')); });
+      safe('JSON', function () { Tools.initJson(panel('#lab-json')); });
+      safe('二维码', function () { Tools.initQr(panel('#lab-qr')); });
+      safe('时间戳', function () { Tools.initTime(panel('#lab-time')); });
+      safe('颜色', function () { Tools.initColor(panel('#lab-color')); });
+      safe('文本', function () { Tools.initText(panel('#lab-text')); });
+      safe('哈希', function () { Tools.initHash(panel('#lab-hash')); });
     }
 
     var gbar = document.getElementById('lab-games-tabs');
-    if (gbar) tabify(gbar, $$('#lab-games-body .lab-panel'));
-    initToolNav();
+    if (gbar) safe('小游戏切换', function () { tabify(gbar, $$('#lab-games-body .lab-panel')); });
+
+    function safe(name, fn) {
+      try { fn(); }
+      catch (e) { if (window.console) console.error('[lab] ' + name + ' 初始化失败：', e); }
+    }
 
     function panel(sel) {
       var n = document.querySelector(sel);
