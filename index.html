@@ -295,6 +295,8 @@
     /* 每个区块 = iOS 分组 */
     .pane{padding:0 16px;margin-top:24px;max-width:none}
     .pane:first-child{margin-top:10px}
+    .pane{scroll-margin-top:56px}
+    #games,#tools-lab{padding-top:0 !important;margin-top:24px}
 
     h1{font-size:34px;line-height:1.1;letter-spacing:-.03em;font-weight:700}
     h1 em{color:#8e8e93}
@@ -391,6 +393,134 @@
   @media (prefers-reduced-motion:reduce){
     *{animation:none !important;transition:none !important}
   }
+
+  /* ============ 实验室：小游戏 / 小工具（新增，独立命名空间） ============ */
+  .lab-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+  .lab-tab{
+    border:1px solid rgba(0,0,0,.1);background:rgba(255,255,255,.7);
+    color:#3c3c43;font:inherit;font-size:12.5px;
+    padding:6px 12px;border-radius:8px;cursor:pointer;
+    transition:background .16s,border-color .16s,color .16s;
+  }
+  .lab-tab:hover{background:#fff}
+  .lab-tab.on{background:#007aff;border-color:#007aff;color:#fff}
+  .lab-panel{display:none;margin-top:14px}
+  .lab-panel.on{display:block}
+
+  .lab-field{display:block;margin-bottom:10px}
+  .lab-field > span{display:block;font-size:12px;color:#8e8e93;margin-bottom:5px}
+  .lab-input,.lab-select,.lab-ta{
+    width:100%;font:inherit;font-size:13.5px;color:#1d1d1f;
+    background:#fff;border:1px solid rgba(0,0,0,.14);border-radius:8px;
+    padding:7px 10px;outline:none;
+  }
+  .lab-input,.lab-select{height:32px}
+  .lab-ta{padding:9px 10px;line-height:1.5;resize:vertical;font-family:var(--mono);font-size:12.5px}
+  .lab-input:focus,.lab-select:focus,.lab-ta:focus{border-color:#007aff;box-shadow:0 0 0 3px rgba(0,122,255,.16)}
+  .lab-range{width:100%;accent-color:#007aff}
+  .lab-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .lab-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    height:32px;padding:0 14px;border-radius:8px;border:1px solid transparent;
+    background:#007aff;color:#fff;font:inherit;font-size:12.5px;font-weight:500;
+    cursor:pointer;transition:background .16s,transform .12s;
+  }
+  .lab-btn:hover{background:#0077ed}
+  .lab-btn:active{transform:scale(.98)}
+  .lab-btn.ghost{background:rgba(255,255,255,.8);border-color:rgba(0,0,0,.12);color:#1d1d1f}
+  .lab-btn.ghost:hover{background:#fff}
+  .lab-hint{font-size:12.5px;color:#8e8e93;line-height:1.6;margin:6px 0}
+  .lab-credit{
+    font-size:11.5px;color:#8e8e93;line-height:1.7;margin-top:16px;
+    padding-top:12px;border-top:1px solid rgba(0,0,0,.08);
+  }
+  .lab-credit a{color:#0066cc}
+  .lab-swatch{width:44px;height:44px;border-radius:10px;border:1px solid rgba(0,0,0,.1);margin:8px 0}
+  .lab-preview{max-width:100%;border-radius:10px;margin-top:10px;border:1px solid rgba(0,0,0,.08)}
+  .lab-qr{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+  .lab-qr-img{width:180px;height:180px;border-radius:8px;border:1px solid rgba(0,0,0,.08);image-rendering:pixelated}
+
+  /* 2048 */
+  .g-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .g-score{
+    display:flex;flex-direction:column;align-items:center;
+    background:rgba(120,120,128,.12);border-radius:8px;padding:5px 12px;min-width:64px;
+  }
+  .g-score span{font-size:10.5px;color:#8e8e93;letter-spacing:.02em}
+  .g-score b{font-size:15px;font-variant-numeric:tabular-nums}
+  .g2048-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+    background:rgba(120,120,128,.14);padding:8px;border-radius:12px;
+    max-width:320px;
+  }
+  .g2048-cell{
+    aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.75);border-radius:8px;
+    font-size:20px;font-weight:700;color:#5b5b60;font-variant-numeric:tabular-nums;
+  }
+  .g2048-cell.v2{background:#eee4da;color:#776e65}
+  .g2048-cell.v4{background:#ede0c8;color:#776e65}
+  .g2048-cell.v8{background:#f2b179;color:#fff}
+  .g2048-cell.v16{background:#f59563;color:#fff}
+  .g2048-cell.v32{background:#f67c5f;color:#fff}
+  .g2048-cell.v64{background:#f65e3b;color:#fff}
+  .g2048-cell.v128{background:#edcf72;color:#fff;font-size:17px}
+  .g2048-cell.v256{background:#edcc61;color:#fff;font-size:17px}
+  .g2048-cell.v512{background:#edc850;color:#fff;font-size:17px}
+  .g2048-cell.v1024{background:#edc53f;color:#fff;font-size:14px}
+  .g2048-cell.v2048{background:#edc22e;color:#fff;font-size:14px}
+
+  /* 贪吃蛇 */
+  .g-canvas{max-width:100%;height:auto;border-radius:12px;border:1px solid rgba(0,0,0,.08);touch-action:none}
+
+  /* 扫雷 */
+  .mine-grid{display:grid;gap:3px;max-width:320px;margin-top:4px}
+  .mine-cell{
+    aspect-ratio:1;border:0;border-radius:4px;cursor:pointer;
+    background:rgba(120,120,128,.22);color:#1d1d1f;
+    font:inherit;font-size:13px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .12s;
+  }
+  .mine-cell:hover{background:rgba(120,120,128,.32)}
+  .mine-cell.open{background:#fff;border:1px solid rgba(0,0,0,.08);cursor:default}
+  .mine-cell.boom{background:#ff3b30;color:#fff}
+  .mine-cell.flag{color:#ff3b30}
+  .mine-cell.n1{color:#007aff}
+  .mine-cell.n2{color:#34c759}
+  .mine-cell.n3{color:#ff9500}
+  .mine-cell.n4{color:#af52de}
+  .mine-cell.n5{color:#ff2d55}
+  .g-over{
+    flex-basis:100%;font-size:12.5px;color:#ff3b30;
+    background:rgba(255,59,48,.1);border-radius:8px;padding:7px 10px;
+  }
+
+  .lab-file{
+    width:100%;font:inherit;font-size:13px;color:#3c3c43;
+    border:1px dashed rgba(0,0,0,.18);border-radius:8px;background:rgba(255,255,255,.7);
+    padding:10px;
+  }
+  .lab-file::file-selector-button{
+    font:inherit;font-size:12.5px;font-weight:500;
+    margin-right:10px;padding:6px 12px;border-radius:7px;
+    border:0;background:#007aff;color:#fff;cursor:pointer;
+  }
+  .lab-file::-webkit-file-upload-button{
+    font:inherit;font-size:12.5px;font-weight:500;
+    margin-right:10px;padding:6px 12px;border-radius:7px;
+    border:0;background:#007aff;color:#fff;cursor:pointer;
+  }
+  @media (max-width:640px){
+    .lab-tabs{gap:5px}
+    .lab-tab{padding:5px 10px;font-size:12px}
+    .lab-tab.on{font-weight:600}
+    .g2048-grid,.mine-grid{max-width:100%}
+    .g2048-cell{font-size:17px}
+    .lab-ta{font-size:12px}
+    .lab-input,.lab-select{height:36px;font-size:14px}
+    .lab-btn{height:36px}
+  }
 </style>
 </head>
 <body>
@@ -435,6 +565,9 @@
         <a class="side-item" href="https://github.com/ekamalbekuulu-ai/XiaoXia" target="_blank" rel="noopener"><img src="assets/icons/xiaoxia.svg" alt="">小匣</a>
         <a class="side-item" href="https://github.com/ekamalbekuulu-ai/ST-Manager" target="_blank" rel="noopener"><img src="assets/icons/st-manager.png" alt="">ST 管理器</a>
         <a class="side-item" href="https://github.com/ekamalbekuulu-ai/yoyo-iade" target="_blank" rel="noopener"><img src="assets/icons/yoyo-iade.png" alt="">YoYo iade</a>
+        <div class="side-title">实验室</div>
+        <a class="side-item" href="#games"><span class="dot"></span>小游戏</a>
+        <a class="side-item" href="#tools-lab"><span class="dot"></span>小工具</a>
       </aside>
 
       <section class="content" id="top">
@@ -583,6 +716,62 @@
           </div>
         </div>
 
+        <!-- ===== 新增：小游戏 ===== -->
+        <div class="pane" id="games" style="padding-top:34px">
+          <h2>小游戏</h2>
+          <p class="sub" style="font-size:13.5px;margin-top:6px">三个经典小游戏，纯前端实现，不联网也能玩。</p>
+
+          <div class="lab-tabs" id="lab-games-tabs">
+            <button class="lab-tab on" type="button" data-target="lab-g2048">2048</button>
+            <button class="lab-tab" type="button" data-target="lab-snake">贪吃蛇</button>
+            <button class="lab-tab" type="button" data-target="lab-mine">扫雷</button>
+          </div>
+          <div id="lab-games-body">
+            <div class="lab-panel on" id="lab-g2048"></div>
+            <div class="lab-panel" id="lab-snake"></div>
+            <div class="lab-panel" id="lab-mine"></div>
+          </div>
+
+          <p class="lab-credit">
+            2048 的玩法与计分规则参考 Gabriele Cirulli 的开源项目
+            <a href="https://github.com/gabrielecirulli/2048" target="_blank" rel="noopener">gabrielecirulli/2048</a>（MIT）；
+            贪吃蛇、扫雷为经典玩法，代码为本页自行实现。
+          </p>
+        </div>
+
+        <!-- ===== 新增：小工具 ===== -->
+        <div class="pane" id="tools-lab" style="padding-top:34px">
+          <h2>小工具</h2>
+          <p class="sub" style="font-size:13.5px;margin-top:6px">八个常用小工具，全部在本地运算，不会上传任何数据。</p>
+
+          <div class="lab-tabs" id="lab-tools-tabs">
+            <button class="lab-tab on" type="button" data-target="lab-image">图片转换</button>
+            <button class="lab-tab" type="button" data-target="lab-base64">Base64</button>
+            <button class="lab-tab" type="button" data-target="lab-json">JSON</button>
+            <button class="lab-tab" type="button" data-target="lab-qr">二维码</button>
+            <button class="lab-tab" type="button" data-target="lab-time">时间戳</button>
+            <button class="lab-tab" type="button" data-target="lab-color">颜色</button>
+            <button class="lab-tab" type="button" data-target="lab-text">文本 / URL</button>
+            <button class="lab-tab" type="button" data-target="lab-hash">哈希</button>
+          </div>
+          <div id="lab-tools-body">
+            <div class="lab-panel on" id="lab-image"></div>
+            <div class="lab-panel" id="lab-base64"></div>
+            <div class="lab-panel" id="lab-json"></div>
+            <div class="lab-panel" id="lab-qr"></div>
+            <div class="lab-panel" id="lab-time"></div>
+            <div class="lab-panel" id="lab-color"></div>
+            <div class="lab-panel" id="lab-text"></div>
+            <div class="lab-panel" id="lab-hash"></div>
+          </div>
+
+          <p class="lab-credit">
+            二维码生成使用开源库
+            <a href="https://github.com/kazuhikoarase/qrcode-generator" target="_blank" rel="noopener">qrcode-generator</a>
+            （作者 Kazuhiko Arase，MIT，已本地内置，未走 CDN）；
+            其余工具使用浏览器原生 Canvas / Web Crypto 实现。
+          </p>
+        </div>
         <div class="pane" id="support" style="padding-top:34px">
           <h2>支持一下</h2>
           <p class="sub" style="font-size:13.5px;margin-top:6px">不点也没关系，用着顺手就够了。</p>
@@ -693,6 +882,10 @@
     <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
     <span>工具</span>
   </a>
+  <a class="tab" href="#games" data-tab="games">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="10" rx="4"/><path d="M7 12h2M8 11v2"/><circle cx="16" cy="12" r="1"/></svg>
+    <span>小游戏</span>
+  </a>
   <a class="tab" href="#log" data-tab="log">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
     <span>更新</span>
@@ -702,5 +895,7 @@
     <span>支持</span>
   </a>
 </nav>
+<script src="vendor/qrcode.js" defer></script>
+<script src="js/lab.js" defer></script>
 </body>
 </html>
