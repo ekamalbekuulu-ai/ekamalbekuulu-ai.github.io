@@ -700,8 +700,122 @@
         w.append(el('span', null, label), node);
         return w;
       }
-    }
-  };
+    },
+
+    /* 图片 → PDF */
+    initImg2Pdf: function (root) {
+      var input = el('input');
+      input.type = 'file'; input.accept = 'image/*'; input.multiple = true;
+      input.className = 'lab-file';
+      var pageSize = el('select', 'lab-select');
+      [['fit', '跟随图片尺寸'], ['a4', 'A4 纸张（居中）']].forEach(function (p) {
+        var o = el('option', null, p[1]); o.value = p[0]; pageSize.append(o);
+      });
+      var row = el('div', 'lab-row');
+      var btn = el('button', 'lab-btn', '生成 PDF');
+      row.append(btn);
+      var info = el('p', 'lab-hint', '可以一次选多张图片，按顺序合成一个 PDF。');
+      var list = el('div', 'lab-hint');
+      root.append(field('图片（可多选）', input), field('页面尺寸', pageSize), row, info, list);
+
+      input.addEventListener('change', function () {
+        var files = Array.prototype.slice.call(input.files || []);
+        list.textContent = files.length ? '已选 ' + files.length + ' 张：' + files.map(function (f) { return f.name; }).join('、') : '';
+      });
+
+      btn.addEventListener('click', async function () {
+        var files = Array.prototype.slice.call(input.files || []);
+        if (!files.length) { info.textContent = '先选几张图片'; return; }
+        if (!window.PDFLib) { info.textContent = 'PDF 组件还没加载完，稍等一下再试'; return; }
+        btn.disabled = true; info.textContent = '正在生成…';
+        try {
+          var pdf = await PDFLib.PDFDocument.create();
+          for (var i = 0; i < files.length; i++) {
+            var buf = await files[i].arrayBuffer();
+            var isPng = /png$/i.test(files[i].type) || /\.png$/i.test(files[i].name);
+            var img = isPng ? await pdf.embedPng(buf) : await pdf.embedJpg(buf);
+            var w = img.width, h = img.height;
+            if (pageSize.value === 'a4') {
+              var page = pdf.addPage([595.28, 841.89]);
+              var scale = Math.min(595.28 / w, 841.89 / h);
+              page.drawImage(img, {
+                x: (595.28 - w * scale) / 2,
+                y: (841.89 - h * scale) / 2,
+                width: w * scale,
+                height: h * scale
+              });
+            } else {
+              var p2 = pdf.addPage([w, h]);
+              p2.drawImage(img, { x: 0, y: 0, width: w, height: h });
+            }
+          }
+          var bytes = await pdf.save();
+          var blob = new Blob([bytes], { type: 'application/pdf' });
+          var url = URL.createObjectURL(blob);
+          var a = el('a', 'lab-btn', '下载 PDF（' + files.length + ' 页）');
+          a.href = url; a.download = 'images.pdf';
+          info.textContent = '生成完成，共 ' + files.length + ' 页，' + Math.round(blob.size / 1024) + ' KB';
+          list.innerHTML = ''; list.append(a);
+        } catch (e) {
+          info.textContent = '生成失败：' + (e && e.message ? e.message : '图片格式可能不受支持');
+        }
+        btn.disabled = false;
+      });
+      function field(label, node) {
+        var w = el('label', 'lab-field');
+        w.append(el('span', null, label), node);
+        return w;
+      }
+    },
+
+    /* PDF 合并 */
+    initPdfMerge: function (root) {
+      var input = el('input');
+      input.type = 'file'; input.accept = 'application/pdf'; input.multiple = true;
+      input.className = 'lab-file';
+      var row = el('div', 'lab-row');
+      var btn = el('button', 'lab-btn', '合并 PDF');
+      row.append(btn);
+      var info = el('p', 'lab-hint', '选择多个 PDF，按选择顺序合并成一个。');
+      var list = el('div', 'lab-hint');
+      root.append(field('PDF 文件（可多选）', input), row, info, list);
+
+      input.addEventListener('change', function () {
+        var files = Array.prototype.slice.call(input.files || []);
+        list.textContent = files.length ? '已选 ' + files.length + ' 个：' + files.map(function (f) { return f.name; }).join('、') : '';
+      });
+
+      btn.addEventListener('click', async function () {
+        var files = Array.prototype.slice.call(input.files || []);
+        if (files.length < 2) { info.textContent = '至少选两个 PDF 才能合并'; return; }
+        if (!window.PDFLib) { info.textContent = 'PDF 组件还没加载完，稍等一下再试'; return; }
+        btn.disabled = true; info.textContent = '正在合并…';
+        try {
+          var out = await PDFLib.PDFDocument.create();
+          for (var i = 0; i < files.length; i++) {
+            var buf = await files[i].arrayBuffer();
+            var src = await PDFLib.PDFDocument.load(buf, { ignoreEncryption: true });
+            var pages = await out.copyPages(src, src.getPageIndices());
+            pages.forEach(function (p) { out.addPage(p); });
+          }
+          var bytes = await out.save();
+          var blob = new Blob([bytes], { type: 'application/pdf' });
+          var url = URL.createObjectURL(blob);
+          var a = el('a', 'lab-btn', '下载合并后的 PDF');
+          a.href = url; a.download = 'merged.pdf';
+          info.textContent = '合并完成，共 ' + out.getPageCount() + ' 页，' + Math.round(blob.size / 1024) + ' KB';
+          list.innerHTML = ''; list.append(a);
+        } catch (e) {
+          info.textContent = '合并失败：' + (e && e.message ? e.message : '文件可能已加密');
+        }
+        btn.disabled = false;
+      });
+      function field(label, node) {
+        var w = el('label', 'lab-field');
+        w.append(el('span', null, label), node);
+        return w;
+      }
+    }  };
 
   /* ---------------- MD5（自行实现，无第三方依赖） ---------------- */
   function md5(str) {
@@ -756,6 +870,8 @@
     }
     if (toolsRoot) {
       Tools.initImage(panel('#lab-image'));
+      Tools.initImg2Pdf(panel('#lab-img2pdf'));
+      Tools.initPdfMerge(panel('#lab-pdfmerge'));
       Tools.initBase64(panel('#lab-base64'));
       Tools.initJson(panel('#lab-json'));
       Tools.initQr(panel('#lab-qr'));

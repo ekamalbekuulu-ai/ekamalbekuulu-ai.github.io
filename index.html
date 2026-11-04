@@ -719,30 +719,28 @@
         <!-- ===== 新增：小游戏 ===== -->
         <div class="pane" id="games" style="padding-top:34px">
           <h2>小游戏</h2>
-          <p class="sub" style="font-size:13.5px;margin-top:6px">三个经典小游戏，纯前端实现，不联网也能玩。</p>
+          <p class="sub" style="font-size:13.5px;margin-top:6px">两个经典小游戏，纯前端实现，不联网也能玩。</p>
 
           <div class="lab-tabs" id="lab-games-tabs">
             <button class="lab-tab on" type="button" data-target="lab-g2048">2048</button>
             <button class="lab-tab" type="button" data-target="lab-snake">贪吃蛇</button>
-            <button class="lab-tab" type="button" data-target="lab-mine">扫雷</button>
           </div>
           <div id="lab-games-body">
             <div class="lab-panel on" id="lab-g2048"></div>
             <div class="lab-panel" id="lab-snake"></div>
-            <div class="lab-panel" id="lab-mine"></div>
           </div>
 
           <p class="lab-credit">
             2048 的玩法与计分规则参考 Gabriele Cirulli 的开源项目
             <a href="https://github.com/gabrielecirulli/2048" target="_blank" rel="noopener">gabrielecirulli/2048</a>（MIT）；
-            贪吃蛇、扫雷为经典玩法，代码为本页自行实现。
+            贪吃蛇为经典玩法，代码为本页自行实现。
           </p>
         </div>
 
         <!-- ===== 新增：小工具 ===== -->
         <div class="pane" id="tools-lab" style="padding-top:34px">
           <h2>小工具</h2>
-          <p class="sub" style="font-size:13.5px;margin-top:6px">八个常用小工具，全部在本地运算，不会上传任何数据。</p>
+          <p class="sub" style="font-size:13.5px;margin-top:6px">十个常用小工具，全部在本地运算，不会上传任何数据。</p>
 
           <div class="lab-tabs" id="lab-tools-tabs">
             <button class="lab-tab on" type="button" data-target="lab-image">图片转换</button>
@@ -756,6 +754,8 @@
           </div>
           <div id="lab-tools-body">
             <div class="lab-panel on" id="lab-image"></div>
+            <div class="lab-panel" id="lab-img2pdf"></div>
+            <div class="lab-panel" id="lab-pdfmerge"></div>
             <div class="lab-panel" id="lab-base64"></div>
             <div class="lab-panel" id="lab-json"></div>
             <div class="lab-panel" id="lab-qr"></div>
@@ -769,6 +769,7 @@
             二维码生成使用开源库
             <a href="https://github.com/kazuhikoarase/qrcode-generator" target="_blank" rel="noopener">qrcode-generator</a>
             （作者 Kazuhiko Arase，MIT，已本地内置，未走 CDN）；
+            PDF 功能使用 <a href="https://github.com/Hopding/pdf-lib" target="_blank" rel="noopener">pdf-lib</a>（MIT，已本地内置）；
             其余工具使用浏览器原生 Canvas / Web Crypto 实现。
           </p>
         </div>
@@ -896,6 +897,7 @@
   </a>
 </nav>
 <script src="vendor/qrcode.js" defer></script>
+<script src="vendor/pdf-lib.min.js" defer></script>
 <script src="js/lab.js" defer></script>
 </body>
 </html>
